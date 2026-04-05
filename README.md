@@ -50,3 +50,32 @@ PocketBase reposunda yer alan GitHub Actions (`release.yml`) CI/CD paketi incele
 **Kritik Soru Cevabı:**
 * **Webhook Nedir?** Webhook, bir sistemde (örneğin GitHub'da) bir olay gerçekleştiğinde (örneğin koda yeni bir güncelleme geldiğinde), başka bir sisteme (örneğin bizim sunucumuza) otomatik olarak gerçek zamanlı veri (HTTP POST isteği) gönderen bir mekanizmadır.
 * **Bu Proje Özelinde Ne İşe Yarar?** Geliştirici ana koda yeni bir özellik ekleyip "push" yaptığında veya yeni bir versiyon etiketi (tag) oluşturduğunda, Webhook bu durumu CI/CD sistemine haber verir. Sistem de hiçbir insan müdahalesi olmadan otomatik olarak yeni sürümü derleyip yayına alır.
+
+
+---
+
+## 🐳 Adım 4: Docker Mimarisi ve Konteyner Güvenliği
+
+**Görev:**
+PocketBase projesinin Docker yapısı ve izolasyon mekanizmaları incelenmiştir.
+
+**Kritik Soruların Cevapları:**
+* **Docker İmajı Nedir ve Katmanları Nelerdir?** Docker imajı, bir uygulamanın çalışması için gereken her şeyi (kod, kütüphaneler, ortam değişkenleri) paketleyen hafif, bağımsız bir dosyadır. PocketBase imajı, resmi `alpine` Linux dağıtımı katmanının üzerine PocketBase binary dosyasının eklenmesiyle (katmanlandırılmasıyla) inşa edilir.
+* **Konteyner Sistem İçinde Nerelere Erişebilir?** Konteynerler varsayılan olarak izoledir. PocketBase konteyneri sadece kendi içine bağlanan `/pb_data` dizinine ve dışarıya açtığı `8090` portuna erişebilir. Ana işletim sisteminin diğer kritik dosyalarına erişemez.
+* **Ortamı En Güvenli Hale Nasıl Getirebiliriz?** PocketBase çalıştırılırken `root` kullanıcısı yerine yetkisiz bir kullanıcı (Non-root user) tanımlanarak güvenlik artırılabilir.
+* **Kubernetes ve VM ile Farkı Nedir?** Sanal Makineler (VM) koca bir işletim sistemini simüle ettiği için çok ağırdır. Docker ise ana makinenin çekirdeğini (kernel) ortak kullanır, çok hafiftir. Kubernetes ise binlerce Docker konteynerini aynı anda yöneten, orkestra eden devasa bir sistemdir.
+
+---
+
+## 🕵️‍♂️ Adım 5: Kaynak Kod ve Akış Analizi (Threat Modeling)
+
+**Görev:**
+PocketBase uygulamasının başlangıç noktası (entrypoint) ve kimlik doğrulama (Authentication) yapısı kaynak kod seviyesinde incelenmiştir.
+
+* **Başlangıç Noktası (Entrypoint):** Uygulamanın giriş noktası Go dilinde yazılmış olan `main.go` dosyasıdır.
+* **Kimlik Doğrulama (Auth) Mekanizması:** PocketBase, kullanıcı ve admin doğrulamaları için **JWT (JSON Web Token)** mimarisini kullanmaktadır.
+
+**Kritik Soruların Cevapları:**
+* **Bir Hacker Verileri Nasıl Çalacağını Nasıl Bilir?** Hackerlar açık kaynaklı projelerin kodlarını inceleyerek veritabanı bağlantı şemalarını (schema), API endpoint'lerini ve zayıf yazılmış SQL sorgularını ararlar. PocketBase'de tüm endpoint'ler ve yetkilendirme kuralları (Rules) açıkça kodda yer alır.
+* **Bu Auth Mekanizmasına D
+
