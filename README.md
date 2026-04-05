@@ -79,3 +79,20 @@ PocketBase uygulamasının başlangıç noktası (entrypoint) ve kimlik doğrula
 * **Bir Hacker Verileri Nasıl Çalacağını Nasıl Bilir?** Hackerlar açık kaynaklı projelerin kodlarını inceleyerek veritabanı bağlantı şemalarını (schema), API endpoint'lerini ve zayıf yazılmış SQL sorgularını ararlar. PocketBase'de tüm endpoint'ler ve yetkilendirme kuralları (Rules) açıkça kodda yer alır.
 * **Bu Auth Mekanizmasına D
 
+
+---
+
+## eXTRA  : Web Yazılım Güvenliği Analizi (#L1: The Broken Door)
+
+Dersimizin kapsamı olan "Güvenli Web Yazılımı" çerçevesinde, 100.000 satırlık dev bir projede yapılabilecek tek satırlık bir kod hatasının (The Broken Door) nelere yol açabileceği simüle edilmiştir.
+
+### 1. Güvensiz Kod Bloğu (Zafiyetli Durum)
+Aşağıdaki backend kodunda, kullanıcının siparişlerini çeken endpoint'te token doğrulayan `if` bloğunun unutulduğu veya silindiği varsayılmıştır:
+
+```javascript
+// ZAFİYETLİ ENDPOINT (GÜVENSİZ YAZILIM)
+app.get('/api/orders', (req, res) => {
+    // KRİTİK HATA: Burada 'if (!isValidToken(req))' kontrolü unutulmuştur!
+    const orders = database.getAllOrders(); 
+    res.json(orders); // Herkese tüm veriyi döner!
+});
