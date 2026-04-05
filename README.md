@@ -1,8 +1,5 @@
 # Açık Kaynak Proje Analizi: PocketBase (SecOps & Systems)
 
-**Öğrenci Adı:** Meltem Eser  
-**Seçilen Repo:** PocketBase (Kategori 4 - Platformlar ve Hizmet Olarak Backend)
-
 ---
 
 ## GİRİŞ VE HEDEF
