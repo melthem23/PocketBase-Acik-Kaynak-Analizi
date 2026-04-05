@@ -17,3 +17,6 @@ PocketBase projesinin otomatik kurulum betiği (`install.sh`) incelenmiş ve sis
 * **Bu dosya ne yapıyor?** Betik, Linux sistem mimarisini kontrol eder, uygun PocketBase sürümünü tespit eder ve dosyayı `/tmp` dizinine indirir.
 * **Hangi dizinleri oluşturuyor ve yetki istiyor?** `/usr/local/bin` dizinine erişim talep eder ve kopyalama işlemi için `sudo` yetkisi ister. Çekilen binary dosyasına `chmod +x` ile çalıştırma yetkisi verir.
 
+**Kritik Soru Cevabı:**
+Yazılımın indirdiği kaynaklar (Resmi GitHub Releases) güvenlidir. Ancak betik içerisinde çekilen dosyanın **SHA-256 hash (imza) kontrolünün yapılmadığı** tespit edilmiştir. Yazılım doğrudan `curl | bash` mantığına yakın çalışmaktadır. Güvenlik açısından bu durum risklidir ve manuel hash kontrolü eklenmesi önerilir.
+
