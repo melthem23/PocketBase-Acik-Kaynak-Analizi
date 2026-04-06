@@ -95,4 +95,85 @@ app.get('/api/orders', (req, res) => {
     // KRİTİK HATA: Burada 'if (!isValidToken(req))' kontrolü unutulmuştur!
     const orders = database.getAllOrders(); 
     res.json(orders); // Herkese tüm veriyi döner!
+});---
+
+## 🛠️ Kurulum ve Test Süreci
+
+Bu proje analiz edilirken aşağıdaki adımlar uygulanmıştır:
+
+```bash
+./pocketbase serve
+```
+
+* Sistem ayağa kaldırıldı
+* Port 8090 aktif olarak gözlemlendi
+* API endpoint’leri test edildi
+
+---
+
+## 🧹 Forensic Kanıtlar
+
+Aşağıdaki komutlarla sistemde iz kalmadığı doğrulanmıştır:
+
+```bash
+netstat -tulnp | grep 8090
+systemctl status pocketbase
+```
+
+Sonuç: Aktif port veya servis bulunmamıştır.
+
+---
+
+## 🐳 Docker Güvenlik Notları
+
+* Container izolasyonu sağlanır
+* Ancak root çalıştırılırsa risk oluşur
+
+Öneri:
+
+* Non-root user kullanılmalı
+* Volume erişimleri sınırlandırılmalı
+
+---
+
+## 🧨 Threat Senaryosu
+
+Eğer authentication kontrolü kaldırılırsa:
+
+* Tüm kullanıcı verileri açığa çıkar
+* API herkese açık hale gelir
+* Veri ihlali oluşur
+
+---
+
+## 🔐 Güvenli Kod Örneği
+
+```js
+app.get('/api/orders', (req, res) => {
+    if (!isValidToken(req)) {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const userId = getUserFromToken(req);
+    const orders = database.getOrdersByUser(userId);
+
+    res.json(orders);
 });
+```
+
+---
+
+## 📊 Genel Değerlendirme
+
+PocketBase:
+
+✔ Hafif ve hızlı
+✔ Modern mimari
+❌ Varsayılan güvenlik eksikleri mevcut
+
+---
+
+## 🎯 Sonuç
+
+Bu proje yalnızca teorik değil, gerçek sistem davranışı ve güvenlik riskleri analiz edilerek hazırlanmıştır.
+
